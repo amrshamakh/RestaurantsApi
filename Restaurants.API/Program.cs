@@ -1,24 +1,19 @@
-using Microsoft.EntityFrameworkCore;
-using Restaurants.Infrastructure.Presistence;
-using Restaurants.Infrastructure.Extentions;
+using Restaurants.API.Extensions;
+using Restaurants.API.middlewares;
 using Restaurants.Application.Extensions;
+using Restaurants.Domain.Entities;
+using Restaurants.Infrastructure.Extentions;
 using Restaurants.Infrastructure.Seeders;
 using Serilog;
-using Restaurants.API.middlewares;
+ 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<ErrorHandlingMiddle>();
+builder.Addpresentation();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-builder.Host.UseSerilog((context, configuration) =>
-configuration
-.ReadFrom.Configuration(context.Configuration)
-);
+
 var app = builder.Build();
 
 var scope= app.Services.CreateScope();
@@ -30,9 +25,13 @@ app.UseSerilogRequestLogging();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.MapGroup("api/identity")
+    .WithTags("Identity")
+.MapIdentityApi<User>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

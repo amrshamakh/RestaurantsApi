@@ -8,6 +8,7 @@
         public decimal Price { get; set; }
 
         public int?KiloCalories { get; set; }
+        public string? ImageUrl { get; set; }
         public int RestaurantId { get; set; }
     }
 }
