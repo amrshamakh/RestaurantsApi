@@ -7,6 +7,7 @@ using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 using Restaurants.Application.Restaurants.Dtos;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
+using Restaurants.Domain.Constants;
 
 namespace Restaurants.API.Controllers
 {
@@ -52,6 +53,7 @@ namespace Restaurants.API.Controllers
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> DeleteRestaurant([FromRoute]int id)
         {
             var isDeleted= await mediator.Send(new DeleteRestaurantCommand(id));

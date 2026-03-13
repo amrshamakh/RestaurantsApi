@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Common.Interfaces;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
+using Restaurants.Infrastructure.Authorization;
 using Restaurants.Infrastructure.Presistence;
 using Restaurants.Infrastructure.Repositories;
 using Restaurants.Infrastructure.Seeders;
@@ -21,7 +23,11 @@ namespace Restaurants.Infrastructure.Extentions
             // Add infrastructure services here
             services.AddScoped<IRestaurantsRepository, RestaurantRepository>();
             services.AddScoped<IDishRepository, DishesRepository>();
-            services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<RestaurantsDbContext>();
+            services.AddIdentityApiEndpoints<User>()
+                .AddRoles<IdentityRole>()
+                .AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()
+                .AddEntityFrameworkStores<RestaurantsDbContext>();
+
             services.AddScoped<IFileStorage, FileStorage>();
         }
     }

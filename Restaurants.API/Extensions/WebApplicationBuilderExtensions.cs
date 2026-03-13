@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 using Restaurants.API.middlewares;
+using Restaurants.Infrastructure.Presistence;
 using Serilog;
 
 namespace Restaurants.API.Extensions
@@ -8,6 +10,13 @@ namespace Restaurants.API.Extensions
     {
         public static void Addpresentation(this WebApplicationBuilder builder)
         {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+            });
             builder.Services.AddAuthentication();
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen(c =>
